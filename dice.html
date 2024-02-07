@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dice Roll Simulation</title>
+<style>
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+  background-color: #f0f0f0;
+  gap: 20px;
+  background-image: url('dice-bg.jpg');
+  background-size: cover; /* Cover the entire page */
+  background-position: center ; /* Center the background image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+}
+
+
+
+.dice {
+  width: 100px;
+  height: 100px;
+  background-color: #FFF;
+    background-color: rgba(0, 0, 0, 0.7); /* Black with transparency */
+  color: #FFF; /* White text for better visibility */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
+  margin: 10px;
+  position: relative;
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Four-sided dice (tetrahedron) simulation */
+#dice4 {
+}
+
+/* Six-sided dice (cube) simulation */
+#dice6 {
+  /* No specific clip-path needed for a cube representation */
+      clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+
+/* Eight-sided dice (octahedron) simulation */
+#dice8 {
+  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+}
+
+@keyframes roll {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.rolling {
+  animation: roll 0.5s ease-in-out;
+}
+</style>
+</head>
+<body>
+
+<div id="dice4" class="dice">1</div>
+<button onclick="rollDice('dice4', 4)">Roll 4-Sided Dice</button>
+
+<div id="dice6" class="dice">1</div>
+<button onclick="rollDice('dice6', 6)">Roll 6-Sided Dice</button>
+
+<div id="dice8" class="dice">1</div>
+<button onclick="rollDice('dice8', 8)">Roll 8-Sided Dice</button>
+
+<script>
+function rollDice(diceId, sides) {
+  var dice = document.getElementById(diceId);
+  dice.classList.add('rolling');
+
+  // Flash random numbers while the dice is rolling
+  var interval = setInterval(function() {
+    dice.textContent = Math.floor(Math.random() * sides) + 1;
+  }, 100);
+
+  setTimeout(function() {
+    clearInterval(interval); // Stop flashing random numbers
+    dice.textContent = Math.floor(Math.random() * sides) + 1; // Settle on a final number
+    dice.classList.remove('rolling');
+  }, 500); // Match timeout to animation duration
+}
+</script>
+</body>
+</html>
