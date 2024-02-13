@@ -1,97 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dice Roll Simulation</title>
-<style>
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  flex-direction: column;
-  background-color: #f0f0f0;
-  gap: 20px;
-  background-image: url('dice-bg.jpg');
-  background-size: cover; /* Cover the entire page */
-  background-position: center ; /* Center the background image */
-  background-repeat: no-repeat; /* Do not repeat the image */
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Roll Simulation</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: auto;
+            /* Changed from 100vh to auto to accommodate wrapping */
+            min-height: 100vh;
+            /* Ensure it takes at least the height of the viewport */
+            flex-direction: row;
+            /* Changed from column to row */
+            flex-wrap: wrap;
+            /* Allow the items to wrap as needed */
+            padding: 20px;
+            /* Add some padding to ensure there's space around the items */
+            gap: 20px;
+            /* Maintain gap between items */
+            background-color: #f0f0f0;
+            background-image: url('dice-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
 
+        .dice {
+            cursor: pointer;
+            width: 100px;
+            height: 100px;
+            background-color: rgba(0, 0, 0, 0.7);
+            /* Black with transparency */
+            color: #FFF;
+            /* White text for better visibility */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            margin: 10px;
+            position: relative;
+            transition: transform 0.5s ease-in-out;
+        }
 
+        .circle {
+            width: 100px;
+            cursor: pointer;
+            height: 100px;
+            background-color: rgba(0, 0, 0, 0.7);
+            /* Ceate a circle clip path */
+            clip-path: circle(50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #FFF;
+            /* White text for visibility */
+            font-size: 2em;
+        }
 
-.dice {
-  width: 100px;
-  height: 100px;
-  background-color: #FFF;
-    background-color: rgba(0, 0, 0, 0.7); /* Black with transparency */
-  color: #FFF; /* White text for better visibility */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 2em;
-  margin: 10px;
-  position: relative;
-  transition: transform 0.5s ease-in-out;
-}
+        #dice4 {
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
 
-/* Four-sided dice (tetrahedron) simulation */
-#dice4 {
-}
+        #dice20 {
+            clip-path: polygon( 50% 0%, /* Top middle */
+            100% 25%, /* Top right */
+            100% 75%, /* Bottom right */
+            50% 100%, /* Bottom middle */
+            0% 75%, /* Bottom left */
+            0% 25%/* Top left */
+            );
+        }
 
-/* Six-sided dice (cube) simulation */
-#dice6 {
-  /* No specific clip-path needed for a cube representation */
-      clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-}
+        /* Eight-sided dice (octahedron) simulation */
 
-/* Eight-sided dice (octahedron) simulation */
-#dice8 {
-  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
-}
+        #dice8 {
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        }
 
-@keyframes roll {
-  from {
-    transform: rotate(360deg);
-  }
-  to {
-    transform: rotate(0deg);
-  }
-}
+        @keyframes roll {
+            from {
+                transform: rotate(360deg);
+            }
+            to {
+                transform: rotate(0deg);
+            }
+        }
 
-.rolling {
-  animation: roll 0.5s ease-in-out;
-}
-</style>
+        .rolling {
+            animation: roll 0.5s ease-in-out;
+        }
+    </style>
 </head>
+
 <body>
+<audio id="diceRollSound" src="dice-sound.mp3"></audio>
 
-<div id="dice4" class="dice">1</div>
-<button onclick="rollDice('dice4', 4)">Roll 4-Sided Dice</button>
+    <div id="dice4" class="dice" onclick="rollDice('dice4', 4)" title="Click to Roll D4">1</div>
 
-<div id="dice6" class="dice">1</div>
-<button onclick="rollDice('dice6', 6)">Roll 6-Sided Dice</button>
+    <div id="dice6" class="dice" onclick="rollDice('dice6', 6)">1</div>
 
-<div id="dice8" class="dice">1</div>
-<button onclick="rollDice('dice8', 8)">Roll 8-Sided Dice</button>
+    <div id="dice8" class="dice" onclick="rollDice('dice8', 8)">1</div>
 
-<script>
-function rollDice(diceId, sides) {
-  var dice = document.getElementById(diceId);
-  dice.classList.add('rolling');
+    <div id="dice20" class="dice" onclick="rollDice('dice20', 20)">1</div>
 
-  // Flash random numbers while the dice is rolling
-  var interval = setInterval(function() {
-    dice.textContent = Math.floor(Math.random() * sides) + 1;
-  }, 100);
+    <div id="dice100" class="circle" onclick="rollDice('dice100', 100)">1</div>
 
-  setTimeout(function() {
-    clearInterval(interval); // Stop flashing random numbers
-    dice.textContent = Math.floor(Math.random() * sides) + 1; // Settle on a final number
-    dice.classList.remove('rolling');
-  }, 500); // Match timeout to animation duration
-}
-</script>
+    <script>
+        function rollDice(diceId, sides)
+        {
+            var dice = document.getElementById(diceId);
+            dice.classList.add('rolling');
+                // Play the dice roll sound
+    var sound = document.getElementById("diceRollSound");
+    sound.play();
+            var interval = setInterval(function()
+            {
+                dice.textContent = Math.floor(Math.random() * sides) +
+                    1;
+            }, 100);
+
+            setTimeout(function()
+            {
+                clearInterval(interval);
+                dice.textContent = Math.floor(Math.random() * sides) +
+                    1;
+                dice.classList.remove('rolling');
+            }, 500);
+        }
+
+
+    </script>
 </body>
+
 </html>
